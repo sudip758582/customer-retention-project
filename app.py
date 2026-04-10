@@ -7,38 +7,32 @@ st.set_page_config(page_title="Customer Retention Dashboard", layout="wide")
 # ---------------- PREMIUM UI CSS ----------------
 st.markdown("""
 <style>
-/* Main background */
 .stApp {
     background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
     color: white;
 }
 
-/* Sidebar */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #141e30, #243b55);
     color: white;
 }
 
-/* Titles */
 h1, h2, h3 {
     color: #ffffff;
 }
 
-/* Glass card effect */
-.css-1r6slb0, .stMetric {
+.stMetric {
     background: rgba(255, 255, 255, 0.08);
     padding: 15px;
     border-radius: 15px;
     backdrop-filter: blur(10px);
 }
 
-/* Dataframe styling */
 .stDataFrame {
     background: rgba(255,255,255,0.05);
     border-radius: 10px;
 }
 
-/* Section spacing */
 .block-container {
     padding-top: 2rem;
 }
@@ -87,7 +81,10 @@ col1, col2 = st.columns(2)
 with col1:
     st.subheader("📊 Engagement vs Churn")
     engagement = df.groupby("IsActiveMember")["Exited"].mean()
-    engagement.index = ["Inactive", "Active"]
+    
+    # ✅ FIXED (safe mapping)
+    engagement.index = engagement.index.map({0: "Inactive", 1: "Active"})
+    
     st.bar_chart(engagement)
 
 with col2:
